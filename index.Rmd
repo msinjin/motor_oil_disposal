@@ -55,10 +55,10 @@ write_csv(d, "~/Dropbox/R/Oil_recycle_ottawa/locations.csv")
 d <- read.csv("~/Dropbox/R/ottawa_motor_oil_disposal/locations.csv")
 
 the_map <- leaflet() %>% 
-  setMaxBounds(lng1 = -76.05, 
-               lat1 = 45.05, 
-               lng2 = -75.4, 
-               lat2 = 45.55) %>%
+  # setMaxBounds(lng1 = -76.05, 
+  #              lat1 = 45.05, 
+  #              lng2 = -75.4, 
+  #             lat2 = 45.55) %>%
   addTiles() %>% 
   addCircleMarkers(lng = d$lon, 
              lat = d$lat, 
