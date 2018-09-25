@@ -5,34 +5,38 @@ output: html_document
 
 City of Ottawa (Ontario, Canada) ["Take it back!" member](http://app06.ottawa.ca/online_services/recycling/items/371_en.html) business locations accepting used motor oil for reuse, recycling or proper disposal.
 
-Accuracy of provided information cannot be guaranteed, it is up to you to contact business locations to verify they will accept your used oil.
+Accuracy of provided information cannot be guaranteed.Contact business locations to verify they will accept your used oil.
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
-# General-purpose data wrangling
-# library(plyr)
-# library(tidyverse)
-# # Parsing of HTML/XML files
-# library(rvest)
-# # String manipulation
-# library(stringr)
-# # Verbose regular expressions
-# library(rebus)
-# # Eases DateTime manipulation
-# library(lubridate)
-# library(ggmap)
 library(leaflet)
+
 ```
 
 ```{r get_data, eval=F, include = F}
+
+library(rvest)
+library(ggmap)
+# Run the following code to if there are changes to the list of locations 
+# provided by The City or if the page location moves
 url <- "http://app06.ottawa.ca/online_services/recycling/items/371_en.html"
 html <- read_html(url)
-d <- data.frame(matrix(html_text(html_nodes(html, ".tibpartners td")), ncol = 3, byrow = T, dimnames = list(NULL,c("Name", "Short_address", "Phone"))))
+
+# Web scrape
+# found CSS element ".tibpartners td" using https://selectorgadget.com
+d <- data.frame(matrix(html_text(html_nodes(html, ".tibpartners td")), 
+                       ncol = 3, 
+                       byrow = T, 
+                       dimnames = list(NULL,c("Name", 
+                                              "Short_address", 
+                                              "Phone"))))
 
 d$Long_address <- paste0(d$Short_address, ", Ottawa")
 d$lon <- NA_real_
 d$lat <- NA_real_
 d$address <- NA_character_
 
+# Brute force geolocation seach using google maps API
 while(any(is.na(d$lon), is.na(d$lat))){
   for(i in 1:nrow(d)){
     if(any(is.na(d[i,]$lon), is.na(d[i,]$lat))) {
@@ -40,12 +44,20 @@ while(any(is.na(d$lon), is.na(d$lat))){
     }
   }  
 }
-write_csv(d, "~/Dropbox/R/Oil_recycle_ottawa/locations.csv")
-```
 
-```{r make_map, echo = F}
+write_csv(d, "~/Dropbox/R/Oil_recycle_ottawa/locations.csv")
+
+```
+<center>
+```{r make_map, fig.align="center", echo = F}
+
 d <- read.csv("~/Dropbox/R/ottawa_motor_oil_disposal/locations.csv")
+
 the_map <- leaflet() %>% 
+  setMaxBounds(lng1 = -76.05, 
+               lat1 = 45.05, 
+               lng2 = -75.4, 
+               lat2 = 45.55) %>%
   addTiles() %>% 
   addCircleMarkers(lng = d$lon, 
              lat = d$lat, 
@@ -55,9 +67,13 @@ the_map <- leaflet() %>%
                            d$Phone)
              )
 the_map
-```
 
+```
+</center>
 ```{r make_table, echo = F}
+
 library(knitr)
-kable(d[, c("Name", "Short_address", "Phone")], col.names = c("Business Name", "Address", "Phone"))
+kable(d[, c("Name", "Short_address", "Phone")], 
+      col.names = c("Business Name", "Address", "Phone"))
+
 ```
