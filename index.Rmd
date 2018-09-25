@@ -3,9 +3,9 @@ title: "Ottawa Used Motor Oil Disposal Locations"
 output: html_document
 ---
 
-City of Ottawa (Ontario, Canada) ["Take it back!" members](http://app06.ottawa.ca/online_services/recycling/items/371_en.html) accepting used motor oil for reuse, recycling or proper disposal.
+City of Ottawa (Ontario, Canada) ["Take it back!" member](http://app06.ottawa.ca/online_services/recycling/items/371_en.html) business locations accepting used motor oil for reuse, recycling or proper disposal.
 
-Accuracy of provided information cannot be guaranteed, it is up to you to contact disposal locations to verify they will accept your used oil.
+Accuracy of provided information cannot be guaranteed, it is up to you to contact business locations to verify they will accept your used oil.
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 # General-purpose data wrangling
@@ -52,7 +52,12 @@ the_map <- leaflet() %>%
              popup = paste(sep = "<br/>",
                            "<b>", d$Name, "</b>",
                            d$Short_address,
-                           d$Phone), 
-             label = d$Name)
+                           d$Phone)
+             )
 the_map
+```
+
+```{r make_table, echo = F}
+library(knitr)
+kable(d[, c("Name", "Short_address", "Phone")], col.names = c("Business Name", "Address", "Phone"))
 ```
