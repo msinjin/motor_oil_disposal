@@ -1,11 +1,12 @@
 ---
-title: "Ottawa Used Motor Oil Disposal Locations"
 output: html_document
 ---
+<center>
 
-City of Ottawa (Ontario, Canada) ["Take it back!" member](http://app06.ottawa.ca/online_services/recycling/items/371_en.html) business locations accepting used motor oil for reuse, recycling or proper disposal.
+# Used Motor Oil Disposal Locations
+#### City of Ottawa used oil ["Take it back!" member](http://app06.ottawa.ca/online_services/recycling/items/371_en.html) businesses 
 
-Accuracy of provided information cannot be guaranteed.Contact business locations to verify they will accept your used oil.
+
 ```{r setup, include=FALSE}
 
 knitr::opts_chunk$set(echo = TRUE)
@@ -48,7 +49,7 @@ while(any(is.na(d$lon), is.na(d$lat))){
 write_csv(d, "~/Dropbox/R/Oil_recycle_ottawa/locations.csv")
 
 ```
-<center>
+
 ```{r make_map, fig.align="center", echo = F}
 
 d <- read.csv("~/Dropbox/R/ottawa_motor_oil_disposal/locations.csv")
@@ -69,7 +70,15 @@ the_map <- leaflet() %>%
 the_map
 
 ```
-</center>
+
+<i>
+Accuracy of provided information is not guaranteed.<br>
+Contact businesses to verify they will accept your used oil.
+</i>
+
+
+---
+
 ```{r make_table, echo = F}
 
 library(knitr)
@@ -77,3 +86,5 @@ kable(d[, c("Name", "Short_address", "Phone")],
       col.names = c("Business Name", "Address", "Phone"))
 
 ```
+
+</center>
