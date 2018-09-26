@@ -41,7 +41,10 @@ d$address <- NA_character_
 while(any(is.na(d$lon), is.na(d$lat))){
   for(i in 1:nrow(d)){
     if(any(is.na(d[i,]$lon), is.na(d[i,]$lat))) {
-      d[i,c("lon", "lat","address")] <- geocode(d[i,"Long_address"], output = "latlona", source = "google", override_limit = T)
+      d[i,c("lon", "lat","address")] <- geocode(d[i,"Long_address"], 
+                                                output = "latlona", 
+                                                source = "google", 
+                                                override_limit = T)
     }
   }  
 }
@@ -50,9 +53,11 @@ write_csv(d, "~/Dropbox/R/Oil_recycle_ottawa/locations.csv")
 
 ```
 
-```{r make_map, fig.align="center", echo = F}
+```{r make_map, fig.align="center", echo = F, message = F}
 
-d <- read.csv("~/Dropbox/R/ottawa_motor_oil_disposal/locations.csv")
+library(RCurl)
+
+d <-read.csv(text=getURL("https://raw.githubusercontent.com/msinjin/motor_oil_disposal/master/locations.csv"), header=T)
 
 the_map <- leaflet() %>% 
   # setMaxBounds(lng1 = -76.05, 

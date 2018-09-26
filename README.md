@@ -4,7 +4,7 @@ The City of Ottawa provides a list of ["Take it back!" members](http://app06.ott
 
 This project provides an interactive map interface to find these member locations. It works by:
 
-1. Web-scraping The City's list,
+1. Web-scraping [The City's list](http://app06.ottawa.ca/online_services/recycling/items/371_en.html),
 2. Geolocating member addresses in the list, and
 3. Plotting results with [leaflet](https://leafletjs.com)
 
